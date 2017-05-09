@@ -11,6 +11,7 @@ using Microsoft.Win32;
 using System.Collections.Generic;
 using PhotoEditor;
 using System.Text;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -18,11 +19,15 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using PhotoEditor.Controls;
 using System.Runtime.InteropServices;
+using Xceed.Wpf.Toolkit; 
+
+
 
 namespace PhotoEditor
 {
     public partial class MainWindow : Window
     {
+        
         [DllImport("Kernel32")]
         public static extern void AllocConsole();
         [DllImport("Kernel32")]
@@ -558,16 +563,39 @@ namespace PhotoEditor
             ResizeButton.BorderThickness = new Thickness(0.5);
         }
 
-        private void colorRedSelected(object sender, RoutedEventArgs e)
+       //- выбор цвета
+       public Color? ColorName
         {
-            VisualHost.BrushColor = Brushes.Red;
+            get
+            {
+                return ColorPicker1.SelectedColor;
+            }
+        }
+      
+
+
+
+        private void SelectColor(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+
+
+            Color Colorid = (Color)ColorName;
+            var mySolidColorBrush = new SolidColorBrush(Colorid);
+
+            VisualHost.BrushColor = mySolidColorBrush;
         }
 
-        private void colorBlackSelected(object sender, RoutedEventArgs e)
+        private void Pouring(object sender, RoutedEventArgs e)
         {
-            VisualHost.BrushColor = Brushes.Black;
+            Layer layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
+         
+
+            Color Colorid = (Color)ColorName;
+            
+            layer.Background = new SolidColorBrush(Colorid);
+
+           // layer.refreshBrush();
         }
-
-
+        // - конец выбора цвета
     }
 }
